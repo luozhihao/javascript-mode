@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>单例模式-登陆窗口</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body, html {
+        font-family: Arial, Microsoft YaHei;
+    }
+
+    .btn-group {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        bottom: 20%;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 6px 100px;
+        font-size: 14px;
+        font-weight: 400;
+        font-family: Arial, Microsoft YaHei;
+        line-height: 1.42857143;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #337ab7;
+        border-color: #2e6da4;
+    }
+
+    .btn-default {
+        color: #333;
+        background-color: #fff;
+        border-color: #ccc;
+    }
+
+    #modal {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        margin-top: -120px;
+        margin-left: -270px;
+        width: 500px;
+        height: 30%;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid #ccc;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        transition: all .2s ease;
+        transform: scale(0);
+        z-index: 999;
+    }
+
+    #modal.show {
+        transform: scale(1);
+    }
+
+    #modal.hide {
+        transform: scale(0, 1);
+    }
+</style>
+</head>
+<body>
+    <div class="btn-group">
+        <button id="open" class="btn btn-primary">打开</button>
+        <button id="delete" class="btn btn-default">关闭</button>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+
+            // 获取DOM对象 
+            var $ = function(id) {
+                return typeof id === 'string' ? document.getElementById(id) : id; 
+            };
+
+            // 弹框实例
+            var Modal = function(id, html) {
+                this.html = html;
+                this.id = id;
+                this.instance = false;
+            };
+
+            Modal.prototype.create = function() {
+                if (!this.instance) {
+                    var modal = document.createElement('div');
+
+                    modal.innerHTML = this.html;
+                    modal.id = this.id;
+                    document.body.appendChild(modal);
+
+                    setTimeout(function() {
+                        modal.classList.add('show');
+                    }, 0);
+
+                    this.instance = true;
+                }
+            };
+
+            Modal.prototype.delete = function() {
+                if (this.instance) {
+                    var modal = $(this.id);
+
+                    modal.classList.add('hide'); 
+
+                    setTimeout(function() {
+                        document.body.removeChild(modal);
+                    }, 200);
+
+                    this.instance = false;
+                }
+            };
+
+            // 判断并创建实例
+            var createIntance = (function() {
+                var instance;
+
+                return function() {
+                    if (!instance) {
+                        instance = new Modal('modal', '这是一个弹框');
+                    }
+
+                    return instance
+                }
+            })();
+
+            // 按钮操作
+            var operate = {
+                setModal: null,
+                open: function() {
+                    this.setModal = createIntance();
+
+                    this.setModal.create();
+                },
+                delete: function() {
+                    this.setModal ? this.setModal.delete() : '';
+                }
+            };
+
+            $('open').onclick = function() {
+                operate.open();
+            };
+
+            $('delete').onclick = function() {
+                operate.delete();
+            };
+        })()
+    </script>
+</body>
+</html>
