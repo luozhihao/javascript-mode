@@ -59,7 +59,7 @@
         text-align: center;
         border: 1px solid #ccc;
         background: #fff;
-        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
         transition: all .2s ease;
         transform: scale(0);
         z-index: 999;
@@ -95,6 +95,7 @@
                 this.instance = false;
             };
 
+            // 创建方法
             Modal.prototype.create = function() {
                 if (!this.instance) {
                     var modal = document.createElement('div');
@@ -111,6 +112,7 @@
                 }
             };
 
+            // 删除方法
             Modal.prototype.delete = function() {
                 if (this.instance) {
                     var modal = $(this.id);
